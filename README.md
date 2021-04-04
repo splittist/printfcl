@@ -22,13 +22,32 @@ PRINTFCL> (fprintf t "%A" 123.45)
 12
 ```
 
+* [Introduction](#introduction)
+* [Functions](#functions)
+* [Format](#format)
+* [Configuring](#configuring)
+* [Handy Utilities](#handy-utilities)
+* [Examples](#examples)
+  * [IEE Floats - using *length modifiers*](#ieee)
+  * [Golike t/T - adding *conversion specifiers*](#golike)
+  * [Javaesque h/H - converters as mix-ins](#javah)
+  * [Pythonish strings - overriding a *conversion specifier*](#pythons)
+  * [Javatime - a different form of *conversion specifier*](#javatime)
+* [Comments, questions and suggestions](#comments)
+
+<a id="introduction"></a>
 ## Introduction
 
 Sometimes you just want to reproduce the effect of `C`-style `printf` output without having to produce your own `CL:FORMAT` string. **printfcl** reproduces the effect of `printf` conversion on lisp objects. Many of the standard conversion specifiers are supported.
 
-**printfcl** is intended to be extensible. **printfcl** is *not* intended to be a replacement for `CL:FORMAT`.
+**printfcl** is intended to be configurable. **printfcl** is *not* intended to be a replacement for `CL:FORMAT`.
 
+**printfcl** has no dependencies and an MIT license.
+
+<a id="functions"></a>
 ## Functions
+
+The **printf**-family functions are:
 
 *function* **PRINTF** `format-string` *&rest* `arguments`
 
@@ -46,6 +65,7 @@ As for **PRINTF**, but prints to `stream`. If `stream` is `T`, prints to `*STAND
 
 Attempts to parse `string` as an `%a`-style hexidecimal float (possibly surrounded by whitespace). The other arguments are as for `CL:PARSE-INTEGER`. Returns a double-float and, as a second value, the position in `string` where parsing stopped.
 
+<a id="format"></a>
 ## Format
 
 The `format-string` is simply copied verbatim, except when a conversion specification is encountered. The following description is valid for the **STANDARD-CONVERTER**. (See below at **Configuring** for more information on what this means.)
@@ -68,8 +88,9 @@ A `%` immediately followed by a `%` causes a single `%` to be copied to the outp
 
 The STANDARD-CONVERTER seeks to reproduce the effect of (mainly) C99 printf when applied to arguments of lisp objects. For this reason it snarfs up as many *length modifiers* as it can see, then ignores them.
 
-For the effect of *flag characters*, *field width*, *precision* and *conversion specifier* please refer to the closest man page or language specification.
+For the effect of *flag characters*, *field width*, *precision* and *conversion specifier* please refer to the closest [man page](https://www.man7.org/linux/man-pages/man3/printf.3.html) or language specification.
 
+<a id="configuring"></a>
 ## Configuring
 
 Because not all printfs are C99, **printfcl** provides a variety of mechanisms for configuring the processing of conversion specifications. Configuration is primarily done by specialising generic functions on a *converter* class with an instance bound to `*CONVERTER*`. By default this is an instance of `STANDARD-CONVERTER`. A number of examples follow the description of the configuration protocol.
@@ -114,6 +135,7 @@ Return a generalised boolean indicating whether `object` should be treated as a 
 
 Return a generalised boolean indicating whetner `object` should be treated as a floating point *Negative Infinity*.
 
+<a id="handy-utilities"></a>
 ## Handy Utilities
 
 The following items assist in writing converters.
@@ -142,8 +164,10 @@ Return a string of `length` spaces.
 
 Return a string of `length` zeros.
 
+<a id="examples"></a>
 ## Examples
 
+<a id="ieee"></a>
 ### IEEE Floats - using *length modifiers*
 
 We have some IEEE double precision ("binary64") and extended precision ("extended 80 bit") floats (as integers) to be interpreted in accordance with the "L" length modifier. They might include infinities and NaNs. The format string includes "%Lf" and "%Le" conversion specifiers.
@@ -238,6 +262,7 @@ And we test:
 
 Yay.
 
+<a id="golike"></a>
 ### Golike t/T - adding *conversion specifiers*
 
 Go's version of printf has a `t` conversion specifier that prints the truth value of its corresponding argument, and a `T` conversion specifier that prints its type.
@@ -268,6 +293,8 @@ When we test this, remember that "t" is a standard *length modifier*, so we'll h
 BIT (SIMPLE-ARRAY CHARACTER (3)) GOLIKE-T-CONVERTER true false
 62
 ```
+
+<a id="javah"></a>
 ### Javaesque h/H - converters as mix-ins
 
 Java's printf has `h` and `H` conversion specifiers that print the hashCode() of the argument (or "null"). (`H` is the upper-case version of `h`.)
@@ -316,6 +343,7 @@ When testing this time we keep only the *length modifier* we need:
 ```
 (Your results will differ.)
 
+<a id="pythons"></a>
 ### Pythonish strings - overriding a *conversion specifier*
 
 Python's `s` conversion specifier calls `__str__` on its argument; its `r` conversion specifier calls `__repr__`. We can counterfeit this with calls to `CL:PRINC[-TO-STRING]` and `CL:PRIN1[-TO-STRING]`, respectively.
@@ -345,10 +373,10 @@ Hello "World"
 13
 ```
 
+<a id="javatime"></a>
 ### Javatime - a different form of *conversion specifier*
 
-Java's version of printf contains a large number of *conversion specifiers* relating to dates and times.
-[https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html] The system `printfcl/javatime` contins an implementation of these conversion specifiers using the `local-time` system (but assuming unix timestamps are given as arguments).
+Java's [version](https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html) of printf contains a large number of *conversion specifiers* relating to dates and times. The system `printfcl/javatime` contins an implementation of these conversion specifiers using the `local-time` system (but assuming unix timestamps are given as arguments).
 
 Because the time- and date-based conversion specifiers are made up of two characters (e.g. `Ta` or `tC`) we must customize `COLLECT-CONVERSION-SPECIFIER`. Here we handle the `T/t` case and otherwise defer to the STANDARD-CONVERTER with `(call-next-method)`.
 
@@ -412,6 +440,7 @@ The time is: Sun Apr 04 12:21:58 UTC 2021
 41
 ```
 
+<a id="comments"></a>
 ## Comments, questions and suggestions
 
 All comments, questions and suggestions are welcomed.
