@@ -96,7 +96,7 @@
     (convert-string arg flags field-width nil)))
 
 #+(or)(let ((*converter* (make-instance 'golike-T-converter))
-            (*length-modifiers* ""))
+            (*length-modifiers* (remove #\t *length-modifiers*)))
         (printf "%T %T %T %t %t" 1 "foo" *converter* t nil))
 
 (defclass javaesque-h-converter ()

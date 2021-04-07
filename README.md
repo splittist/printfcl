@@ -68,7 +68,7 @@ Attempts to parse `string` as an `%a`-style hexidecimal float (possibly surround
 <a id="format"></a>
 ## Format
 
-The `format-string` is simply copied verbatim, except when a conversion specification is encountered. The following description is valid for the **STANDARD-CONVERTER**. (See below at **Configuring** for more information on what this means.)
+The `format-string` is simply copied verbatim, except when a conversion specification is encountered. The following description is valid for the **STANDARD-CONVERTER**. (See below at [**Configuring**](#configuring) for more information on what this means.)
 
 A conversion specification begins with a `%` sign, followed by (in order):
 
@@ -109,11 +109,11 @@ The class upon which the default behaviour of **printfcl** is specialised.
 
 *generic function* **COLLECT-LENGTH-MODIFIER** `converter` `format-string` `format-string-index`
 
-Given the entire `format-string` passed to the **printf**-family function and the index at which to being parsing (`format-string-index`), return two values: the *length modifier* (in a form to be used by `RETRIEVE-ARGUMENT`) and the updated `format-string-index` (beyond the last character consumed).
+Given the entire `format-string` passed to the **printf**-family function and the index at which to begin parsing (`format-string-index`), return two values: the *length modifier* (in a form to be used by `RETRIEVE-ARGUMENT`) and the updated `format-string-index` (beyond the last character consumed).
 
 *generic function* **COLLECT-CONVERSION-SPECIFIER** `converter` `format-string` `format-string-index`
 
-Given the entire `format-string` passed to the **printf**-family function and the index at which to being parsing (`format-string-index`), return two values: the *conversion specifer* (in a form to be used by `CONVERT`, usually a symbol) and the updated `format-string-index` (beyond the last character consumed).
+Given the entire `format-string` passed to the **printf**-family function and the index at which to begin parsing (`format-string-index`), return two values: the *conversion specifer* (in a form to be used by `CONVERT`, usually a symbol) and the updated `format-string-index` (beyond the last character consumed).
 
 *generic function* **RETRIEVE-ARGUMENT** `converter` `conversion-specifier` `length-modifer` `arguments` `index`
 

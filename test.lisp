@@ -35,6 +35,7 @@
 (defparameter *skiplist* '(105 106 107 108 109 110 111 112 ; integer wraparound
                            170 ; integer wraparound
                            179 ; char as int
+                           538 ; strange precision
                            ))
 
 (defun run (&optional (file #p"test.txt"))

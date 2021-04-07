@@ -139,8 +139,8 @@ PRECISION (nil or an integer).")
   (convert-integer argument flags field-width precision
                    :radix 10 :upperp nil :signedp t))
 
-(defmethod convert ((converter standard-converter) (cs (eql :|i|)) argument
-                    flags field-width precision)
+(defmethod convert ((converter standard-converter) (cs (eql :|i|))
+                    argument flags field-width precision)
   (convert-integer argument flags field-width precision
                    :radix 10 :upperp nil :signedp t))
 
@@ -480,17 +480,6 @@ PRECISION (nil or an integer).")
                         &key radix upperp signedp)
   (with-flags (flags)
     (let ((field-width (or field-width 0)))
-      (when (and (zerop argument) precision (zerop precision))
-        (let ((num (if (and hash-flag (= 8 radix))
-                       "0"
-                       "")))
-          (return-from convert-integer
-            (cond ((zerop field-width)
-                   num)
-                  (minus-flag
-                   (strcat (spaces (- field-width (length num))) num))
-                  (t
-                   (strcat num (spaces (- field-width (length num)))))))))
       (let* ((sign (cond ((not signedp)
                           "")
                          ((minusp argument)
@@ -502,7 +491,11 @@ PRECISION (nil or an integer).")
                          (t
                           "")))
              (sign-length (length sign))
-             (num (format nil "~V,V,'0R" radix (or precision 1) (abs argument)))
+             (num (if (and (zerop argument) precision (zerop precision))
+                      (if (and hash-flag (= 8 radix))
+                          "0"
+                          "")
+                      (format nil "~V,V,'0R" radix (or precision 1) (abs argument))))
              (alt (if hash-flag
                       (ecase radix
                         (10 "")
