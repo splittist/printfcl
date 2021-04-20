@@ -4,7 +4,7 @@ A configurable implementation of `printf` in Common Lisp.
 
 ## Quickstart
 
-Clone this repository into your `quicklisp/local-packages` directory, then `(ql:quickload "printfcl")`, and switch into the `PRINTFCL` package.
+Clone this repository into your `quicklisp/local-projectss` directory, then `(ql:quickload "printfcl")`, and switch into the `PRINTFCL` package.
 
 ```lisp
 PRINTFCL> (printf "pi = %.5f" (* 4 (atan 1.0)))
